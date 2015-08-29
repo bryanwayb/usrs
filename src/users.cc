@@ -168,6 +168,10 @@ struct User* ListUsers(struct ListUsersParams *p, size_t *c)
 void FreeUser(struct User* user)
 {
 	if(user->Username != NULL) free(user->Username);
+	if(user->FullName != NULL) free(user->FullName);
+	if(user->Description != NULL) free(user->Description);
+	if(user->LoginServer != NULL) free(user->LoginServer);
+	if(user->LoginScriptPath != NULL) free(user->LoginScriptPath);
 }
 
 void FreeUserArray(struct User* users, size_t length)
