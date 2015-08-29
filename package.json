@@ -1,0 +1,32 @@
+{
+  "name": "usrs",
+  "version": "0.0.1",
+  "description": "Local/domain user management for Linux and Windows",
+  "main": "lib/index.js",
+  "scripts": {
+    "postinstall": "npm run build",
+    "build": "node ./node_modules/node-gyp/bin/node-gyp configure build",
+    "clean": "node ./node_modules/node-gyp/bin/node-gyp clean",
+    "rebuild": "node ./node_modules/node-gyp/bin/node-gyp rebuild"
+  },
+  "keywords": [
+    "usrs",
+    "management",
+    "user",
+    "usr"
+  ],
+  "contributors": [
+    {
+      "name": "Bryan Way",
+      "email": "bryanwayb@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanwayb/usrs.git"
+  },
+  "dependencies": {
+    "node-gyp": "^2.0.2"
+  }
+}
