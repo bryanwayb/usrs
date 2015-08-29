@@ -33,6 +33,7 @@ v8::Local<v8::Object> userStructToV8Object(v8::Isolate* isolate, struct User *us
 	ret->Set(v8::String::NewFromUtf8(isolate, "fullname"), v8::String::NewFromUtf8(isolate, user->FullName));
 	ret->Set(v8::String::NewFromUtf8(isolate, "description"), v8::String::NewFromUtf8(isolate, user->Description));
 	ret->Set(v8::String::NewFromUtf8(isolate, "type"), v8::Integer::New(isolate, user->Type));
+	ret->Set(v8::String::NewFromUtf8(isolate, "flags"), v8::Integer::New(isolate, user->Flags));
 	ret->Set(v8::String::NewFromUtf8(isolate, "groupId"), v8::Integer::New(isolate, user->GroupId));
 	ret->Set(v8::String::NewFromUtf8(isolate, "passwordAge"), v8::Integer::New(isolate, user->PasswordAge));
 	ret->Set(v8::String::NewFromUtf8(isolate, "passwordExpired"), v8::Boolean::New(isolate, user->PasswordExpired));

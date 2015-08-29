@@ -109,6 +109,21 @@ struct User* ListUsers(struct ListUsersParams *p, size_t *c)
 							break;
 					}
 					
+					enumRet->Flags = UserFlagNone;
+					if(enumBuffer->usri3_flags & UF_ACCOUNTDISABLE)	enumRet->Flags |= UserFlagDisabled;
+					if(enumBuffer->usri3_flags & UF_PASSWD_NOTREQD)	enumRet->Flags |= UserFlagPasswordNotRequired;
+					if(enumBuffer->usri3_flags & UF_PASSWD_CANT_CHANGE)	enumRet->Flags |= UserFlagPasswordCantChange;
+					if(enumBuffer->usri3_flags & UF_LOCKOUT)	enumRet->Flags |= UserFlagLockedOut;
+					if(enumBuffer->usri3_flags & UF_DONT_EXPIRE_PASSWD)	enumRet->Flags |= UserFlagPasswordCantExpire;
+					if(enumBuffer->usri3_flags & UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED)	enumRet->Flags |= UserFlagEncryptedTextPassword;
+					if(enumBuffer->usri3_flags & UF_NOT_DELEGATED)	enumRet->Flags |= UserFlagNotDelegated;
+					if(enumBuffer->usri3_flags & UF_SMARTCARD_REQUIRED)	enumRet->Flags |= UserFlagSmartCardRequired;
+					if(enumBuffer->usri3_flags & UF_DONT_REQUIRE_PREAUTH)	enumRet->Flags |= UserFlagDontRequirePreAuth;
+					if(enumBuffer->usri3_flags & UF_TRUSTED_FOR_DELEGATION)	enumRet->Flags |= UserFlagTrustedForDelegation;
+					if(enumBuffer->usri3_flags & UF_USE_DES_KEY_ONLY)	enumRet->Flags |= UserFlagDESKeyOnly;
+					if(enumBuffer->usri3_flags & UF_PASSWORD_EXPIRED)	enumRet->Flags |= UserFlagPasswordExpired;
+					if(enumBuffer->usri3_flags & UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION)	enumRet->Flags |= UserFlagTrustedAuthForDelegation;
+					
 					enumRet->GroupId = enumBuffer->usri3_primary_group_id;
 					enumRet->PasswordAge = enumBuffer->usri3_password_age;
 					enumRet->PasswordExpired = enumBuffer->usri3_password_expired == 0;
