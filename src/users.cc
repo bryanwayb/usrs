@@ -26,9 +26,10 @@ unsigned long FilterLevelMap[UserFilterMax] = {
 #endif
 
 #include <stdio.h>
-struct User* ListUsers(struct ListUsersParams *p, size_t *c)
+struct User* ListUsers(struct ListUsersParams *p, size_t *c, ErrorCode *error)
 {
 	struct User* ret = NULL;
+	*error = ErrorCodeNone;
 #if defined(OS_WINDOWS)
 	wchar_t *serverName = NULL;
 
@@ -153,9 +154,25 @@ struct User* ListUsers(struct ListUsersParams *p, size_t *c)
 				}
 			}
 		}
+		else if(status == ERROR_ACCESS_DENIED)
+		{
+			*error = ErrorCodeAccessDenied;
+		}
+		else if(status == ERROR_INVALID_LEVEL)
+		{
+			*error = ErrorInvalidLevel;
+		}
+		else if(status == NERR_BufTooSmall)
+		{
+			*error = BufferTooSmall;
+		}
+		else if(status == NERR_InvalidComputer)
+		{
+			*error = InvalidComputer;
+		}
 		else
 		{
-			// System error
+			*error = ErrorCodeUnknown;
 		}
 		
 		if(buffer != NULL)

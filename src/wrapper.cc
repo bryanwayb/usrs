@@ -48,6 +48,34 @@ v8::Local<v8::Object> userStructToV8Object(v8::Isolate* isolate, struct User *us
 	return ret;
 }
 
+void throwExceptionForErrorCode(v8::Isolate* isolate, ErrorCode error)
+{
+	char *errorMsg = NULL;
+	switch(error)
+	{
+		case ErrorInvalidLevel:
+			errorMsg = "Invalid access level requested";
+			break;
+		case ErrorCodeAccessDenied:
+			errorMsg = "Access denied";
+			break;
+		case BufferTooSmall:
+			errorMsg = "Buffer provided is too small";
+			break;
+		case InvalidComputer:
+			errorMsg = "Computer name is invalid";
+			break;
+		default:
+			errorMsg = "An unknown error has occurred";
+			break;
+	}
+	
+	if(errorMsg != NULL)
+	{
+		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, errorMsg)));
+	}
+}
+
 void getUsers(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	v8::Isolate* isolate = v8::Isolate::GetCurrent();
@@ -83,22 +111,33 @@ void getUsers(const v8::FunctionCallbackInfo<v8::Value>& args)
 	}
 	
 	size_t count = 0;
-	struct User* users = ListUsers(&param, &count);
+	ErrorCode error;
+	struct User* users = ListUsers(&param, &count, &error);
 	
-	v8::Handle<v8::Array> results = v8::Array::New(isolate, (int)count);
-	
-	if(!results.IsEmpty())
+	if(error == ErrorCodeNone)
 	{
-		struct User* usersPtr = users;
-		for(int i = 0; i < count; i++)
+		v8::Handle<v8::Array> results = v8::Array::New(isolate, (int)count);
+	
+		if(!results.IsEmpty())
 		{
-			results->Set(i, userStructToV8Object(isolate, usersPtr++));
+			struct User* usersPtr = users;
+			for(int i = 0; i < count; i++)
+			{
+				results->Set(i, userStructToV8Object(isolate, usersPtr++));
+			}
 		}
+		
+		args.GetReturnValue().Set(results);
+	}
+	else
+	{
+		throwExceptionForErrorCode(isolate, error);
 	}
 	
-	args.GetReturnValue().Set(results);
-	
-	FreeUserArray(users, count);
+	if(users && count > 0)
+	{
+		FreeUserArray(users, count);
+	}
 	
 	if(param.ServerName)
 	{

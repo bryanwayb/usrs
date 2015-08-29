@@ -16,7 +16,7 @@ enum UserFilterType
 
 enum UserType
 {
-	UserTypeAdministrator,
+	UserTypeAdministrator = 0,
 	UserTypeNormal,
 	UserTypeGuest
 };
@@ -43,6 +43,16 @@ inline UserFlags operator |= (UserFlags &a, UserFlags b)
 {
     return a = static_cast<UserFlags>(static_cast<unsigned>(a) | static_cast<unsigned>(b));
 }
+
+enum ErrorCode // For internal error detection
+{
+	ErrorCodeNone,
+	ErrorCodeUnknown,
+	ErrorInvalidLevel,
+	ErrorCodeAccessDenied,
+	BufferTooSmall,
+	InvalidComputer
+};
 
 // Structures
 
@@ -74,7 +84,7 @@ struct ListUsersParams
 };
 
 // Functions
-struct User* ListUsers(struct ListUsersParams*, size_t*);
+struct User* ListUsers(struct ListUsersParams*, size_t*, ErrorCode*);
 void FreeUser(struct User*);
 void FreeUserArray(struct User*, size_t);
 
